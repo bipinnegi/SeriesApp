@@ -99,10 +99,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AddSeries.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddSeries.aspx.cs">
+      <DependentUpon>AddSeries.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddSeries.aspx.designer.cs">
+      <DependentUpon>AddSeries.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\SeriesController.cs" />
     <Compile Include="Global.asax.cs">
