@@ -18,3 +18,5 @@ Release/
 
 # Node (if used later)
 node_modules/
+
+packages/
