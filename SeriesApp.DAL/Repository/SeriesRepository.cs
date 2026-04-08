@@ -14,22 +14,43 @@ namespace SeriesApp.DAL.Repository
             dbHelper = new DBHelper.DBHelper();
         }
 
-        public int InsertSeries(string title, string description, int releaseYear, string genre)
+        public int InsertSeries(
+            string title, string description, int releaseYear, string genre,
+            int seriesApiId, string seriesType, string seriesStatus,
+            string matchStatus, string matchFormat, string seriesMatchType,
+            string gender, string trophyType,
+            DateTime? startDate, DateTime? endDate, bool isActive)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@Title", title),
                 new SqlParameter("@Description", description),
                 new SqlParameter("@ReleaseYear", releaseYear),
-                new SqlParameter("@Genre", genre)
+                new SqlParameter("@Genre", genre),
+
+                new SqlParameter("@SeriesApiId", seriesApiId),
+                new SqlParameter("@SeriesType", seriesType),
+                new SqlParameter("@SeriesStatus", seriesStatus),
+                new SqlParameter("@MatchStatus", matchStatus),
+                new SqlParameter("@MatchFormat", matchFormat),
+                new SqlParameter("@SeriesMatchType", seriesMatchType),
+                new SqlParameter("@Gender", gender),
+                new SqlParameter("@TrophyType", trophyType),
+                new SqlParameter("@StartDate", (object)startDate ?? DBNull.Value),
+                new SqlParameter("@EndDate", (object)endDate ?? DBNull.Value),
+                new SqlParameter("@IsActive", isActive)
             };
 
             object result = dbHelper.ExecuteScalar("sp_InsertSeries", CommandType.StoredProcedure, parameters);
-
             return Convert.ToInt32(result);
         }
 
-        public int UpdateSeries(int seriesId, string title, string description, int releaseYear, string genre)
+        public int UpdateSeries(
+            int seriesId, string title, string description, int releaseYear, string genre,
+            int seriesApiId, string seriesType, string seriesStatus,
+            string matchStatus, string matchFormat, string seriesMatchType,
+            string gender, string trophyType,
+            DateTime? startDate, DateTime? endDate, bool isActive)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -37,7 +58,19 @@ namespace SeriesApp.DAL.Repository
                 new SqlParameter("@Title", title),
                 new SqlParameter("@Description", description),
                 new SqlParameter("@ReleaseYear", releaseYear),
-                new SqlParameter("@Genre", genre)
+                new SqlParameter("@Genre", genre),
+
+                new SqlParameter("@SeriesApiId", seriesApiId),
+                new SqlParameter("@SeriesType", seriesType),
+                new SqlParameter("@SeriesStatus", seriesStatus),
+                new SqlParameter("@MatchStatus", matchStatus),
+                new SqlParameter("@MatchFormat", matchFormat),
+                new SqlParameter("@SeriesMatchType", seriesMatchType),
+                new SqlParameter("@Gender", gender),
+                new SqlParameter("@TrophyType", trophyType),
+                new SqlParameter("@StartDate", (object)startDate ?? DBNull.Value),
+                new SqlParameter("@EndDate", (object)endDate ?? DBNull.Value),
+                new SqlParameter("@IsActive", isActive)
             };
 
             return dbHelper.ExecuteNonQuery("sp_UpdateSeries", CommandType.StoredProcedure, parameters);

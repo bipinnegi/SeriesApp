@@ -23,7 +23,19 @@ namespace SeriesApp.BAL.Services
                 model.Title,
                 model.Description,
                 model.ReleaseYear,
-                model.Genre
+                model.Genre,
+
+                model.SeriesApiId,
+                model.SeriesType,
+                model.SeriesStatus,
+                model.MatchStatus,
+                model.MatchFormat,
+                model.SeriesMatchType,
+                model.Gender,
+                model.TrophyType,
+                model.StartDate,
+                model.EndDate,
+                model.IsActive
             );
         }
 
@@ -36,7 +48,19 @@ namespace SeriesApp.BAL.Services
                 model.Title,
                 model.Description,
                 model.ReleaseYear,
-                model.Genre
+                model.Genre,
+
+                model.SeriesApiId,
+                model.SeriesType,
+                model.SeriesStatus,
+                model.MatchStatus,
+                model.MatchFormat,
+                model.SeriesMatchType,
+                model.Gender,
+                model.TrophyType,
+                model.StartDate,
+                model.EndDate,
+                model.IsActive
             );
         }
 
@@ -55,10 +79,22 @@ namespace SeriesApp.BAL.Services
                     Description = row["Description"].ToString(),
                     ReleaseYear = Convert.ToInt32(row["ReleaseYear"]),
                     Genre = row["Genre"].ToString(),
+
+                    SeriesApiId = row["SeriesApiId"] == DBNull.Value ? 0 : Convert.ToInt32(row["SeriesApiId"]),
+                    SeriesType = row["SeriesType"].ToString(),
+                    SeriesStatus = row["SeriesStatus"].ToString(),
+                    MatchStatus = row["MatchStatus"].ToString(),
+                    MatchFormat = row["MatchFormat"].ToString(),
+                    SeriesMatchType = row["SeriesMatchType"].ToString(),
+                    Gender = row["Gender"].ToString(),
+                    TrophyType = row["TrophyType"].ToString(),
+
+                    StartDate = row["StartDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["StartDate"]),
+                    EndDate = row["EndDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["EndDate"]),
+
+                    IsActive = row["IsActive"] == DBNull.Value ? false : Convert.ToBoolean(row["IsActive"]),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
-                    UpdatedDate = row["UpdatedDate"] == DBNull.Value
-                                  ? (DateTime?)null
-                                  : Convert.ToDateTime(row["UpdatedDate"])
+                    UpdatedDate = row["UpdatedDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["UpdatedDate"])
                 });
             }
 
@@ -69,9 +105,6 @@ namespace SeriesApp.BAL.Services
         {
             if (string.IsNullOrWhiteSpace(model.Title))
                 throw new Exception("Title is required");
-
-            if (model.ReleaseYear <= 0)
-                throw new Exception("Invalid Release Year");
         }
     }
 }
