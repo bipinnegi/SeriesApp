@@ -101,6 +101,7 @@
   <ItemGroup>
     <Content Include="AddSeries.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="ManageSeries.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,13 @@
     <Compile Include="Controllers\SeriesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="ManageSeries.aspx.cs">
+      <DependentUpon>ManageSeries.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageSeries.aspx.designer.cs">
+      <DependentUpon>ManageSeries.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
