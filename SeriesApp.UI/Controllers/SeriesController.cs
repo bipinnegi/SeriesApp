@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using SeriesApp.BAL.Services;
 using SeriesApp.BAL.Models;
+using SeriesApp.UI.Helpers;
 
 namespace SeriesApp.UI.Controllers
 {
@@ -15,6 +16,8 @@ namespace SeriesApp.UI.Controllers
             service = new SeriesService();
         }
 
+       
+        // ADD
         [HttpPost]
         public IHttpActionResult Add(SeriesModel model)
         {
@@ -29,6 +32,8 @@ namespace SeriesApp.UI.Controllers
             }
         }
 
+       
+        // UPDATE
         [HttpPost]
         public IHttpActionResult Update(SeriesModel model)
         {
@@ -43,6 +48,8 @@ namespace SeriesApp.UI.Controllers
             }
         }
 
+        
+        // SEARCH
         [HttpGet]
         public IHttpActionResult Search(string title = null, int? releaseYear = null)
         {
@@ -50,6 +57,57 @@ namespace SeriesApp.UI.Controllers
             {
                 var data = service.SearchSeries(title, releaseYear);
                 return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { success = false, message = ex.Message });
+            }
+        }
+
+        
+        // ENCRYPT
+        [HttpGet]
+        public IHttpActionResult Encrypt(string q)
+        {
+            try
+            {
+                string encrypted = CryptoHelper.Encrypt(q);
+                return Ok(encrypted);
+            }
+            catch (Exception ex)
+            {
+                return Ok("Error: " + ex.Message);
+            }
+        }
+
+        
+        //  DECRYPT
+        [HttpGet]
+        public IHttpActionResult Decrypt(string q)
+        {
+            try
+            {
+                string decrypted = CryptoHelper.Decrypt(q);
+                return Ok(decrypted);
+            }
+            catch (Exception ex)
+            {
+                return Ok("Error: " + ex.Message);
+            }
+        }
+
+        
+        // GET BY ID
+        [HttpGet]
+        public IHttpActionResult GetById(int id)
+        {
+            try
+            {
+                var list = service.SearchSeries(null, null);
+
+                var item = list.Find(x => x.SeriesId == id);
+
+                return Ok(item);
             }
             catch (Exception ex)
             {

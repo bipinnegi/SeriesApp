@@ -5,7 +5,6 @@
 <head>
     <title>Add Series</title>
 
-    <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -39,47 +38,84 @@
 
     <button id="btnSave">Save</button>
 
-
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#btnSave").click(function () {
+            loadEditData();
 
-            var series = {
-                SeriesId: $("#seriesId").val(),
-                Title: $("#title").val(),
-                Description: $("#description").val(),
-                ReleaseYear: $("#releaseYear").val(),
-                Genre: $("#genre").val()
-            };
+            $("#btnSave").click(function () {
 
-            var url = "/api/series/add";
+                var series = {
+                    SeriesId: $("#seriesId").val(),
+                    Title: $("#title").val(),
+                    Description: $("#description").val(),
+                    ReleaseYear: $("#releaseYear").val(),
+                    Genre: $("#genre").val()
+                };
 
-            if (series.SeriesId > 0) {
-                url = "/api/series/update";
-            }
+                var url = "/api/series/add";
 
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: JSON.stringify(series),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        alert("Saved successfully!");
-                        window.location.href = "ManageSeries.aspx";
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function () {
-                    alert("Error occurred");
+                if (series.SeriesId > 0) {
+                    url = "/api/series/update";
                 }
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: JSON.stringify(series),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Saved successfully!");
+                            window.location.href = "ManageSeries.aspx";
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+
             });
 
         });
 
-    });
+        function loadEditData() {
+
+            var params = new URLSearchParams(window.location.search);
+            var encrypted = params.get("q");
+
+            if (!encrypted) return;
+
+            $.ajax({
+                url: "/api/series/decrypt?q=" + encrypted,
+                type: "GET",
+                success: function (res) {
+
+                    // res = "Mode=E&Sid=1"
+                    var parts = new URLSearchParams(res);
+                    var mode = parts.get("Mode");
+                    var id = parts.get("Sid");
+
+                    if (mode === "E") {
+
+                        $("#seriesId").val(id);
+
+                        $.ajax({
+                            url: "/api/series/getbyid?id=" + id,
+                            type: "GET",
+                            success: function (data) {
+
+                                $("#title").val(data.Title);
+                                $("#description").val(data.Description);
+                                $("#releaseYear").val(data.ReleaseYear);
+                                $("#genre").val(data.Genre);
+                            }
+                        });
+
+                    }
+                }
+            });
+
+        }
     </script>
 
 </body>

@@ -39,52 +39,67 @@
         </tbody>
     </table>
 
-
-
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        loadData();
-
-        $("#btnSearch").click(function () {
             loadData();
+
+            $("#btnSearch").click(function () {
+                loadData();
+            });
+
+            function loadData() {
+
+                var title = $("#searchTitle").val();
+                var year = $("#searchYear").val();
+
+                $.ajax({
+                    url: "/api/series/search?title=" + title + "&releaseYear=" + year,
+                    type: "GET",
+                    success: function (data) {
+
+                        var rows = "";
+
+                        $.each(data, function (i, item) {
+
+                            rows += "<tr>";
+                            rows += "<td>" + item.SeriesId + "</td>";
+                            rows += "<td>" + item.Title + "</td>";
+                            rows += "<td>" + item.Description + "</td>";
+                            rows += "<td>" + item.ReleaseYear + "</td>";
+                            rows += "<td>" + item.Genre + "</td>";
+                            rows += "<td><button onclick='editSeries(" + item.SeriesId + ")'>Edit</button></td>";
+                            rows += "</tr>";
+
+                        });
+
+                        $("#seriesTable tbody").html(rows);
+                    },
+                    error: function () {
+                        alert("Error loading data");
+                    }
+                });
+            }
+
         });
 
-        function loadData() {
+        function editSeries(id) {
 
-            var title = $("#searchTitle").val();
-            var year = $("#searchYear").val();
+            var query = "Mode=E&Sid=" + id;
 
             $.ajax({
-                url: "/api/series/search?title=" + title + "&releaseYear=" + year,
+                url: "/api/series/encrypt?q=" + query,
                 type: "GET",
-                success: function (data) {
-
-                    var rows = "";
-
-                    $.each(data, function (i, item) {
-
-                        rows += "<tr>";
-                        rows += "<td>" + item.SeriesId + "</td>";
-                        rows += "<td>" + item.Title + "</td>";
-                        rows += "<td>" + item.Description + "</td>";
-                        rows += "<td>" + item.ReleaseYear + "</td>";
-                        rows += "<td>" + item.Genre + "</td>";
-                        rows += "<td><button onclick='editSeries(" + item.SeriesId + ")'>Edit</button></td>";
-                        rows += "</tr>";
-
-                    });
-
-                    $("#seriesTable tbody").html(rows);
+                success: function (res) {
+                    window.location.href = "AddSeries.aspx?q=" + encodeURIComponent(res);
+                },
+                error: function () {
+                    alert("Encryption failed");
                 }
             });
+
         }
-
-    });
-
-    function editSeries(id) {
-        window.location.href = "AddSeries.aspx?mode=E&id=" + id;
-    }
     </script>
+
 </body>
 </html>
