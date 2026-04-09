@@ -86,5 +86,16 @@ namespace SeriesApp.DAL.Repository
 
             return dbHelper.ExecuteSelectCommand("sp_SearchSeries", CommandType.StoredProcedure, parameters);
         }
+
+        
+        public int DeleteSeries(int seriesId)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@SeriesId", seriesId)
+            };
+
+            return dbHelper.ExecuteNonQuery("sp_DeleteSeries", CommandType.StoredProcedure, parameters);
+        }
     }
 }
