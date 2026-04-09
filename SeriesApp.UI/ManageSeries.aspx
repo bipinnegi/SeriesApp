@@ -27,6 +27,10 @@
         .table-container {
             overflow-x: auto;
         }
+
+        button {
+            margin: 2px;
+        }
     </style>
 </head>
 
@@ -112,7 +116,13 @@
                             rows += "<td>" + formatDate(item.EndDate) + "</td>";
                             rows += "<td>" + (item.IsActive ? "Yes" : "No") + "</td>";
                             rows += "<td>" + item.Description + "</td>";
-                            rows += "<td><button onclick='editSeries(" + item.SeriesId + ")'>Edit</button></td>";
+
+                            
+                            rows += "<td>";
+                            rows += "<button onclick='editSeries(" + item.SeriesId + ")'>Edit</button>";
+                            rows += "<button onclick='deleteSeries(" + item.SeriesId + ")'>Delete</button>";
+                            rows += "</td>";
+
                             rows += "</tr>";
 
                         });
@@ -138,6 +148,30 @@
                 type: "GET",
                 success: function (res) {
                     window.location.href = "AddSeries.aspx?q=" + encodeURIComponent(res);
+                }
+            });
+        }
+
+        
+        function deleteSeries(id) {
+
+            if (!confirm("Are you sure you want to delete this record?"))
+                return;
+
+            $.ajax({
+                url: "/api/series/delete?id=" + id,
+                type: "DELETE",
+                success: function (res) {
+
+                    if (res.success) {
+                        alert("Deleted successfully!");
+                        location.reload(); // refresh table
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function () {
+                    alert("Error deleting record");
                 }
             });
         }
