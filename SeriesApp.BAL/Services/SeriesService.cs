@@ -100,6 +100,13 @@ namespace SeriesApp.BAL.Services
 
             return list;
         }
+        public int DeleteSeries(int seriesId)
+        {
+            if (seriesId <= 0)
+                throw new Exception("Invalid Series ID");
+
+            return repository.DeleteSeries(seriesId);
+        }
 
         private void ValidateModel(SeriesModel model)
         {
