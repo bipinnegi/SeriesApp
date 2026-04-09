@@ -10,10 +10,12 @@ namespace SeriesApp.UI.Controllers
     public class SeriesController : ApiController
     {
         private readonly SeriesService service;
+        private readonly ErrorLogService logger; 
 
         public SeriesController()
         {
             service = new SeriesService();
+            logger = new ErrorLogService(); 
         }
 
        
@@ -28,11 +30,12 @@ namespace SeriesApp.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = ex.Message });
+                logger.LogError(ex.Message, ex.StackTrace, "Add API"); 
+                return Ok(new { success = false, message = "Error occurred" });
             }
         }
 
-       
+        
         // UPDATE
         [HttpPost]
         public IHttpActionResult Update(SeriesModel model)
@@ -44,7 +47,8 @@ namespace SeriesApp.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = ex.Message });
+                logger.LogError(ex.Message, ex.StackTrace, "Update API"); 
+                return Ok(new { success = false, message = "Error occurred" });
             }
         }
 
@@ -60,11 +64,12 @@ namespace SeriesApp.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = ex.Message });
+                logger.LogError(ex.Message, ex.StackTrace, "Search API"); 
+                return Ok(new { success = false });
             }
         }
 
-        
+       
         // ENCRYPT
         [HttpGet]
         public IHttpActionResult Encrypt(string q)
@@ -76,12 +81,13 @@ namespace SeriesApp.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok("Error: " + ex.Message);
+                logger.LogError(ex.Message, ex.StackTrace, "Encrypt API"); 
+                return Ok("Error");
             }
         }
 
-        
-        //  DECRYPT
+       
+        // DECRYPT
         [HttpGet]
         public IHttpActionResult Decrypt(string q)
         {
@@ -92,11 +98,12 @@ namespace SeriesApp.UI.Controllers
             }
             catch (Exception ex)
             {
-                return Ok("Error: " + ex.Message);
+                logger.LogError(ex.Message, ex.StackTrace, "Decrypt API"); 
+                return Ok("Error");
             }
         }
 
-        
+       
         // GET BY ID
         [HttpGet]
         public IHttpActionResult GetById(int id)
@@ -104,14 +111,13 @@ namespace SeriesApp.UI.Controllers
             try
             {
                 var list = service.SearchSeries(null, null);
-
                 var item = list.Find(x => x.SeriesId == id);
-
                 return Ok(item);
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = ex.Message });
+                logger.LogError(ex.Message, ex.StackTrace, "GetById API");
+                return Ok<object>(null);
             }
         }
     }
