@@ -8,174 +8,218 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        table {
-            border-collapse: collapse;
+        body { font-family: Arial; background-color: #ffffff; }
+
+        h2 {
+            background-color: #dcdcdc;
+            padding: 10px;
+            border: 1px solid #999;
+        }
+
+        .search-table {
+            border: 1px solid #999;
+            background-color: #f5f5f5;
             width: 100%;
+        }
+
+        .search-table td { padding: 6px; }
+
+        input, select {
+            border: 1px solid #999;
+            padding: 3px;
             font-size: 12px;
         }
 
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #eee;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
+        .btn-panel { margin-top: 10px; }
 
         button {
-            margin: 2px;
+            background-color: #e0e0e0;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover { background-color: #cfcfcf; }
+
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .grid-table th {
+            background-color: #dcdcdc;
+            border: 1px solid #999;
+            padding: 5px;
+        }
+
+        .grid-table td {
+            border: 1px solid #999;
+            padding: 5px;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Manage Series</h2>
+<h2>Manage Series</h2>
 
-    <div>
-        <label>Title:</label>
-        <input type="text" id="searchTitle" />
+<table class="search-table">
+    <tr>
+        <td>Series API ID</td>
+        <td><input type="number" id="searchApiId" /></td>
 
-        <label>Year:</label>
-        <input type="number" id="searchYear" />
+        <td>Series Name</td>
+        <td><input type="text" id="searchTitle" /></td>
 
-        <button id="btnSearch">Search</button>
-    </div>
+        <td>Series Type</td>
+        <td>
+            <select id="searchType">
+                <option value="">All</option>
+                <option>International</option>
+                <option>Domestic</option>
+                <option>Women</option>
+                <option>Mens</option>
+            </select>
+        </td>
+    </tr>
 
-    <br />
+    <tr>
+        <td>Series Start From</td>
+        <td><input type="date" id="searchStartDate" /></td>
 
-    <div class="table-container">
-        <table id="seriesTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>API ID</th>
-                    <th>Title</th>
-                    <th>Year</th>
-                    <th>Type</th>
-                    <th>Series Status</th>
-                    <th>Match Status</th>
-                    <th>Format</th>
-                    <th>Match Type</th>
-                    <th>Gender</th>
-                    <th>Trophy</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Active</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+        <td>Series End To</td>
+        <td><input type="date" id="searchEndDate" /></td>
 
-    <script>
-        $(document).ready(function () {
+        <td>Sort By</td>
+        <td>
+            <select id="sortBy">
+                <option value="">Select</option>
+                <option value="asc">Start Date Asc</option>
+                <option value="desc">Start Date Desc</option>
+            </select>
+        </td>
+    </tr>
+</table>
 
-            loadData();
+<div class="btn-panel">
+    <button id="btnSearch">Search</button>
+    <button id="btnRefresh">Refresh</button>
+    <button onclick="window.location.href='AddSeries.aspx'">Add Series</button>
+</div>
 
-            $("#btnSearch").click(function () {
-                loadData();
-            });
+<table class="grid-table" id="seriesTable">
+    <thead>
+        <tr>
+            <th>Series ID</th>
+            <th>API ID</th>
+            <th>Series Name</th>
+            <th>Year</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Format</th>
+            <th>Gender</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Active</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-            function loadData() {
+<script>
+    $(document).ready(function () {
 
-                var title = $("#searchTitle").val();
-                var year = $("#searchYear").val();
+        loadData();
 
-                $.ajax({
-                    url: "/api/series/search?title=" + title + "&releaseYear=" + year,
-                    type: "GET",
-                    success: function (data) {
-
-                        var rows = "";
-
-                        $.each(data, function (i, item) {
-
-                            rows += "<tr>";
-                            rows += "<td>" + item.SeriesId + "</td>";
-                            rows += "<td>" + item.SeriesApiId + "</td>";
-                            rows += "<td>" + item.Title + "</td>";
-                            rows += "<td>" + item.ReleaseYear + "</td>";
-                            rows += "<td>" + item.SeriesType + "</td>";
-                            rows += "<td>" + item.SeriesStatus + "</td>";
-                            rows += "<td>" + item.MatchStatus + "</td>";
-                            rows += "<td>" + item.MatchFormat + "</td>";
-                            rows += "<td>" + item.SeriesMatchType + "</td>";
-                            rows += "<td>" + item.Gender + "</td>";
-                            rows += "<td>" + item.TrophyType + "</td>";
-                            rows += "<td>" + formatDate(item.StartDate) + "</td>";
-                            rows += "<td>" + formatDate(item.EndDate) + "</td>";
-                            rows += "<td>" + (item.IsActive ? "Yes" : "No") + "</td>";
-                            rows += "<td>" + item.Description + "</td>";
-
-                            
-                            rows += "<td>";
-                            rows += "<button onclick='editSeries(" + item.SeriesId + ")'>Edit</button>";
-                            rows += "<button onclick='deleteSeries(" + item.SeriesId + ")'>Delete</button>";
-                            rows += "</td>";
-
-                            rows += "</tr>";
-
-                        });
-
-                        $("#seriesTable tbody").html(rows);
-                    }
-                });
-            }
-
+        $("#btnSearch").click(loadData);
+        $("#btnRefresh").click(function () {
+            location.reload();
         });
 
-        function formatDate(date) {
-            if (!date) return "";
-            return date.split('T')[0];
-        }
-
-        function editSeries(id) {
-
-            var query = "Mode=E&Sid=" + id;
+        function loadData() {
 
             $.ajax({
-                url: "/api/series/encrypt?q=" + query,
-                type: "GET",
-                success: function (res) {
-                    window.location.href = "AddSeries.aspx?q=" + encodeURIComponent(res);
-                }
-            });
-        }
-
-        
-        function deleteSeries(id) {
-
-            if (!confirm("Are you sure you want to delete this record?"))
-                return;
-
-            $.ajax({
-                url: "/api/series/delete?id=" + id,
-                type: "DELETE",
-                success: function (res) {
-
-                    if (res.success) {
-                        alert("Deleted successfully!");
-                        location.reload(); // refresh table
-                    } else {
-                        alert(res.message);
-                    }
+                url: "/api/series/search",
+                data: {
+                    apiId: $("#searchApiId").val(),
+                    title: $("#searchTitle").val(),
+                    type: $("#searchType").val(),
+                    startDate: $("#searchStartDate").val(),
+                    endDate: $("#searchEndDate").val(),
+                    sortBy: $("#sortBy").val()
                 },
-                error: function () {
-                    alert("Error deleting record");
+                success: function (data) {
+
+                    let rows = "";
+
+                    $.each(data, function (i, item) {
+
+                        rows += "<tr>";
+                        rows += "<td>" + item.SeriesId + "</td>";
+                        rows += "<td>" + item.SeriesApiId + "</td>";
+                        rows += "<td>" + item.Title + "</td>";
+                        rows += "<td>" + item.ReleaseYear + "</td>";
+                        rows += "<td>" + item.SeriesType + "</td>";
+                        rows += "<td>" + item.SeriesStatus + "</td>";
+                        rows += "<td>" + item.MatchFormat + "</td>";
+                        rows += "<td>" + item.Gender + "</td>";
+                        rows += "<td>" + formatDate(item.StartDate) + "</td>";
+                        rows += "<td>" + formatDate(item.EndDate) + "</td>";
+                        rows += "<td>" + (item.IsActive ? "Yes" : "No") + "</td>";
+                        rows += "<td>";
+                        rows += "<button onclick='editSeries(" + item.SeriesId + ")'>Edit</button>";
+                        rows += "<button onclick='deleteSeries(" + item.SeriesId + ")'>Delete</button>";
+                        rows += "</td>";
+                        rows += "</tr>";
+
+                    });
+
+                    $("#seriesTable tbody").html(rows);
                 }
             });
         }
-    </script>
+    });
+
+    // ✅ FIXED: Edit function
+    function editSeries(id) {
+        var query = "Mode=E&Sid=" + id;
+
+        $.ajax({
+            url: "/api/series/encrypt?q=" + query,
+            type: "GET",
+            success: function (res) {
+                window.location.href = "AddSeries.aspx?q=" + encodeURIComponent(res);
+            }
+        });
+    }
+
+    // ✅ FIXED: Delete function
+    function deleteSeries(id) {
+
+        if (!confirm("Are you sure you want to delete this record?"))
+            return;
+
+        $.ajax({
+            url: "/api/series/delete?id=" + id,
+            type: "DELETE",
+            success: function (res) {
+                if (res.success) {
+                    alert("Deleted successfully!");
+                    location.reload();
+                } else {
+                    alert(res.message);
+                }
+            }
+        });
+    }
+
+    function formatDate(date) {
+        return date ? date.split('T')[0] : "";
+    }
+</script>
 
 </body>
 </html>

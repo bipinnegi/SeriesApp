@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using SeriesApp.DAL.Repository;
 using SeriesApp.BAL.Models;
 
@@ -64,10 +65,64 @@ namespace SeriesApp.BAL.Services
             );
         }
 
+        
         public List<SeriesModel> SearchSeries(string title, int? releaseYear)
         {
             DataTable dt = repository.SearchSeries(title, releaseYear);
 
+            return ConvertToList(dt);
+        }
+
+        
+        public List<SeriesModel> SearchSeriesAdvanced(
+            int? apiId,
+            string title,
+            string type,
+            DateTime? startDate,
+            DateTime? endDate,
+            string sortBy)
+        {
+            DataTable dt = repository.SearchSeries(title, null);
+
+            var list = ConvertToList(dt);
+
+            
+            if (apiId.HasValue)
+                list = list.Where(x => x.SeriesApiId == apiId.Value).ToList();
+
+            if (!string.IsNullOrWhiteSpace(title))
+                list = list.Where(x => x.Title.ToLower().Contains(title.ToLower())).ToList();
+
+            if (!string.IsNullOrWhiteSpace(type))
+                list = list.Where(x => x.SeriesType == type).ToList();
+
+            if (startDate.HasValue)
+                list = list.Where(x => x.StartDate >= startDate).ToList();
+
+            if (endDate.HasValue)
+                list = list.Where(x => x.EndDate <= endDate).ToList();
+
+            
+            if (sortBy == "asc")
+                list = list.OrderBy(x => x.StartDate).ToList();
+            else if (sortBy == "desc")
+                list = list.OrderByDescending(x => x.StartDate).ToList();
+
+            return list;
+        }
+
+        
+        public int DeleteSeries(int seriesId)
+        {
+            if (seriesId <= 0)
+                throw new Exception("Invalid Series ID");
+
+            return repository.DeleteSeries(seriesId);
+        }
+
+       
+        private List<SeriesModel> ConvertToList(DataTable dt)
+        {
             List<SeriesModel> list = new List<SeriesModel>();
 
             foreach (DataRow row in dt.Rows)
@@ -99,13 +154,6 @@ namespace SeriesApp.BAL.Services
             }
 
             return list;
-        }
-        public int DeleteSeries(int seriesId)
-        {
-            if (seriesId <= 0)
-                throw new Exception("Invalid Series ID");
-
-            return repository.DeleteSeries(seriesId);
         }
 
         private void ValidateModel(SeriesModel model)

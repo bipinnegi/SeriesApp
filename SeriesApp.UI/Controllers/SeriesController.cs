@@ -18,7 +18,7 @@ namespace SeriesApp.UI.Controllers
             logger = new ErrorLogService();
         }
 
-       
+        
         // ADD
         [HttpPost]
         public IHttpActionResult Add(SeriesModel model)
@@ -35,7 +35,7 @@ namespace SeriesApp.UI.Controllers
             }
         }
 
-       
+        
         // UPDATE
         [HttpPost]
         public IHttpActionResult Update(SeriesModel model)
@@ -53,14 +53,19 @@ namespace SeriesApp.UI.Controllers
         }
 
         
-        // SEARCH
-        
+        //SEARCH
         [HttpGet]
-        public IHttpActionResult Search(string title = null, int? releaseYear = null)
+        public IHttpActionResult Search(
+            int? apiId = null,
+            string title = null,
+            string type = null,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            string sortBy = null)
         {
             try
             {
-                var data = service.SearchSeries(title, releaseYear);
+                var data = service.SearchSeriesAdvanced(apiId, title, type, startDate, endDate, sortBy);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -71,7 +76,7 @@ namespace SeriesApp.UI.Controllers
         }
 
         
-        
+        // DELETE
         [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
@@ -87,7 +92,7 @@ namespace SeriesApp.UI.Controllers
             }
         }
 
-       
+        
         // ENCRYPT
         [HttpGet]
         public IHttpActionResult Encrypt(string q)
@@ -104,7 +109,7 @@ namespace SeriesApp.UI.Controllers
             }
         }
 
-     
+        
         // DECRYPT
         [HttpGet]
         public IHttpActionResult Decrypt(string q)
@@ -128,7 +133,7 @@ namespace SeriesApp.UI.Controllers
         {
             try
             {
-                var list = service.SearchSeries(null, null);
+                var list = service.SearchSeriesAdvanced(null, null, null, null, null, null);
                 var item = list.Find(x => x.SeriesId == id);
 
                 if (item == null)

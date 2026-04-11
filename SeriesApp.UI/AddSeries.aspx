@@ -6,220 +6,276 @@
     <title>Add Series</title>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body { font-family: Arial; background-color: #ffffff; }
+
+        h2 {
+            background-color: #dcdcdc;
+            padding: 10px;
+            border: 1px solid #999;
+        }
+
+        .form-table {
+            width: 100%;
+            border: 1px solid #999;
+            background-color: #f5f5f5;
+        }
+
+        .form-table td { padding: 6px; }
+
+        input, select, textarea {
+            border: 1px solid #999;
+            padding: 4px;
+            font-size: 12px;
+            width: 95%;
+        }
+
+        textarea { height: 60px; }
+
+        .error { color: red; font-size: 11px; }
+
+        .btn-panel { margin-top: 10px; }
+
+        button {
+            background-color: #e0e0e0;
+            border: 1px solid #999;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover { background-color: #cfcfcf; }
+    </style>
 </head>
 
 <body>
 
-    <h2>Add / Edit Series</h2>
+<h2>Add / Edit Series</h2>
 
-    <input type="hidden" id="seriesId" value="0" />
+<input type="hidden" id="seriesId" value="0" />
 
-    <div>
-        <label>Series Name:</label>
-        <input type="text" id="title" />
-    </div>
+<table class="form-table">
 
-    <div>
-        <label>Series API ID:</label>
-        <input type="number" id="seriesApiId" />
-    </div>
+    <tr>
+        <td>Series Name</td>
+        <td>
+            <input type="text" id="title" />
+            <div class="error" id="errTitle"></div>
+        </td>
 
-    <div>
-        <label>Series Type:</label>
-        <select id="seriesType">
-            <option>International</option>
-            <option>Domestic</option>
-            <option>Women</option>
-            <option>Mens</option>
-        </select>
-    </div>
+        <td>Series API ID</td>
+        <td>
+            <input type="number" id="seriesApiId" />
+            <div class="error" id="errApiId"></div>
+        </td>
+    </tr>
 
-    <div>
-        <label>Series Status:</label>
-        <select id="seriesStatus">
-            <option>Scheduled</option>
-            <option>Completed</option>
-            <option>Live</option>
-            <option>Abandon</option>
-        </select>
-    </div>
+    <tr>
+        <td>Series Type</td>
+        <td>
+            <select id="seriesType"></select>
+            <div class="error" id="errType"></div>
+        </td>
 
-    <div>
-        <label>Match Status:</label>
-        <select id="matchStatus">
-            <option>Scheduled</option>
-            <option>Completed</option>
-            <option>Live</option>
-            <option>Abandon</option>
-        </select>
-    </div>
+        <td>Series Status</td>
+        <td>
+            <select id="seriesStatus"></select>
+            <div class="error" id="errStatus"></div>
+        </td>
+    </tr>
 
-    <div>
-        <label>Match Format:</label>
-        <select id="matchFormat">
-            <option>ODI</option>
-            <option>TEST</option>
-            <option>T20</option>
-            <option>T10</option>
-        </select>
-    </div>
+    <tr>
+        <td>Match Status</td>
+        <td><select id="matchStatus"></select></td>
 
-    <div>
-        <label>Series Match Type:</label>
-        <select id="seriesMatchType">
-            <option>ODI</option>
-            <option>TEST</option>
-            <option>T20I</option>
-        </select>
-    </div>
+        <td>Match Format</td>
+        <td><select id="matchFormat"></select></td>
+    </tr>
 
-    <div>
-        <label>Gender:</label>
-        <select id="gender">
-            <option>Mens</option>
-            <option>Womens</option>
-            <option>Other</option>
-        </select>
-    </div>
+    <tr>
+        <td>Series Match Type</td>
+        <td><select id="seriesMatchType"></select></td>
 
-    <div>
-        <label>Year:</label>
-        <input type="number" id="releaseYear" />
-    </div>
+        <td>Gender</td>
+        <td>
+            <select id="gender"></select>
+            <div class="error" id="errGender"></div>
+        </td>
+    </tr>
 
-    <div>
-        <label>Trophy Type:</label>
-        <input type="text" id="trophyType" />
-    </div>
+    <tr>
+        <td>Year</td>
+        <td>
+            <input type="number" id="releaseYear" />
+            <div class="error" id="errYear"></div>
+        </td>
 
-    <div>
-        <label>Start Date:</label>
-        <input type="date" id="startDate" />
-    </div>
+        <td>Trophy Type</td>
+        <td>
+            <input type="text" id="trophyType" />
+            <div class="error" id="errTrophy"></div>
+        </td>
+    </tr>
 
-    <div>
-        <label>End Date:</label>
-        <input type="date" id="endDate" />
-    </div>
+    <tr>
+        <td>Start Date</td>
+        <td>
+            <input type="date" id="startDate" />
+            <div class="error" id="errStart"></div>
+        </td>
 
-    <div>
-        <label>Is Active:</label>
-        <select id="isActive">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-        </select>
-    </div>
+        <td>End Date</td>
+        <td>
+            <input type="date" id="endDate" />
+            <div class="error" id="errEnd"></div>
+        </td>
+    </tr>
 
-    <div>
-        <label>Description:</label>
-        <textarea id="description"></textarea>
-    </div>
+    <tr>
+        <td>Is Active</td>
+        <td>
+            <select id="isActive">
+                <option value="">Select</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            <div class="error" id="errActive"></div>
+        </td>
 
-    <br />
+        <td>Description</td>
+        <td>
+            <textarea id="description"></textarea>
+        </td>
+    </tr>
 
+</table>
+
+<div class="btn-panel">
     <button id="btnSave">Save</button>
+    <button id="btnCancel">Cancel</button>
+</div>
 
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
-            loadEditData();
+        loadDropdowns();
+        loadEditData(); // ✅ now exists
 
-            $("#btnSave").click(function () {
-
-                var series = {
-                    SeriesId: $("#seriesId").val(),
-                    Title: $("#title").val(),
-                    Description: $("#description").val(),
-                    ReleaseYear: $("#releaseYear").val(),
-                    Genre: "General",
-
-                    SeriesApiId: $("#seriesApiId").val(),
-                    SeriesType: $("#seriesType").val(),
-                    SeriesStatus: $("#seriesStatus").val(),
-                    MatchStatus: $("#matchStatus").val(),
-                    MatchFormat: $("#matchFormat").val(),
-                    SeriesMatchType: $("#seriesMatchType").val(),
-                    Gender: $("#gender").val(),
-                    TrophyType: $("#trophyType").val(),
-                    StartDate: $("#startDate").val(),
-                    EndDate: $("#endDate").val(),
-                    IsActive: $("#isActive").val() === "true"
-                };
-
-                var url = "/api/series/add";
-
-                if (series.SeriesId > 0) {
-                    url = "/api/series/update";
-                }
-
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: JSON.stringify(series),
-                    contentType: "application/json",
-                    success: function (response) {
-                        if (response.success) {
-                            alert("Saved successfully!");
-                            window.location.href = "ManageSeries.aspx";
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                });
-
-            });
-
+        $("#btnCancel").click(function () {
+            window.location.href = "ManageSeries.aspx";
         });
 
-        function loadEditData() {
+        $("#btnSave").click(function () {
 
-            var params = new URLSearchParams(window.location.search);
-            var encrypted = params.get("q");
+            if (!validateForm()) return;
 
-            if (!encrypted) return;
+            var series = {
+                SeriesId: $("#seriesId").val(),
+                Title: $("#title").val(),
+                Description: $("#description").val(),
+                ReleaseYear: $("#releaseYear").val(),
+                Genre: "General",
+
+                SeriesApiId: $("#seriesApiId").val(),
+                SeriesType: $("#seriesType").val(),
+                SeriesStatus: $("#seriesStatus").val(),
+                MatchStatus: $("#matchStatus").val(),
+                MatchFormat: $("#matchFormat").val(),
+                SeriesMatchType: $("#seriesMatchType").val(),
+                Gender: $("#gender").val(),
+                TrophyType: $("#trophyType").val(),
+                StartDate: $("#startDate").val(),
+                EndDate: $("#endDate").val(),
+                IsActive: $("#isActive").val() === "true"
+            };
+
+            var url = "/api/series/add";
+            if (series.SeriesId > 0) url = "/api/series/update";
 
             $.ajax({
-                url: "/api/series/decrypt?q=" + encrypted,
-                type: "GET",
-                success: function (res) {
-
-                    var parts = new URLSearchParams(res);
-                    var mode = parts.get("Mode");
-                    var id = parts.get("Sid");
-
-                    if (mode === "E") {
-
-                        $("#seriesId").val(id);
-
-                        $.ajax({
-                            url: "/api/series/getbyid?id=" + id,
-                            type: "GET",
-                            success: function (data) {
-
-                                $("#title").val(data.Title);
-                                $("#description").val(data.Description);
-                                $("#releaseYear").val(data.ReleaseYear);
-
-                                $("#seriesApiId").val(data.SeriesApiId);
-                                $("#seriesType").val(data.SeriesType);
-                                $("#seriesStatus").val(data.SeriesStatus);
-                                $("#matchStatus").val(data.MatchStatus);
-                                $("#matchFormat").val(data.MatchFormat);
-                                $("#seriesMatchType").val(data.SeriesMatchType);
-                                $("#gender").val(data.Gender);
-                                $("#trophyType").val(data.TrophyType);
-                                $("#startDate").val(data.StartDate?.split('T')[0]);
-                                $("#endDate").val(data.EndDate?.split('T')[0]);
-                                $("#isActive").val(data.IsActive.toString());
-                            }
-                        });
-
+                url: url,
+                type: "POST",
+                data: JSON.stringify(series),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        alert("Saved successfully!");
+                        window.location.href = "ManageSeries.aspx";
+                    } else {
+                        alert("Error: " + response.message);
                     }
                 }
             });
+        });
+    });
 
-        }
-    </script>
+    function validateForm() {
+
+        $(".error").text("");
+        let isValid = true;
+
+        if (!$("#title").val()) { $("#errTitle").text("Required"); isValid = false; }
+        if (!$("#seriesApiId").val()) { $("#errApiId").text("Required"); isValid = false; }
+        if (!$("#seriesType").val()) { $("#errType").text("Required"); isValid = false; }
+        if (!$("#seriesStatus").val()) { $("#errStatus").text("Required"); isValid = false; }
+        if (!$("#gender").val()) { $("#errGender").text("Required"); isValid = false; }
+        if (!$("#releaseYear").val()) { $("#errYear").text("Required"); isValid = false; }
+        if (!$("#trophyType").val()) { $("#errTrophy").text("Required"); isValid = false; }
+        if (!$("#startDate").val()) { $("#errStart").text("Required"); isValid = false; }
+        if (!$("#endDate").val()) { $("#errEnd").text("Required"); isValid = false; }
+        if (!$("#isActive").val()) { $("#errActive").text("Required"); isValid = false; }
+
+        return isValid;
+    }
+
+    function loadDropdowns() {
+        $("#seriesType").html("<option value=''>Select</option><option>International</option><option>Domestic</option>");
+        $("#seriesStatus").html("<option value=''>Select</option><option>Scheduled</option><option>Completed</option>");
+        $("#matchStatus").html("<option>Scheduled</option><option>Completed</option>");
+        $("#matchFormat").html("<option>ODI</option><option>T20</option>");
+        $("#seriesMatchType").html("<option>ODI</option><option>T20</option>");
+        $("#gender").html("<option value=''>Select</option><option>Mens</option><option>Womens</option>");
+    }
+
+    function loadEditData() {
+
+        var params = new URLSearchParams(window.location.search);
+        var encrypted = params.get("q");
+
+        if (!encrypted) return;
+
+        $.ajax({
+            url: "/api/series/decrypt?q=" + encrypted,
+            type: "GET",
+            success: function (res) {
+
+                var parts = new URLSearchParams(res);
+                var id = parts.get("Sid");
+
+                $("#seriesId").val(id);
+
+                $.ajax({
+                    url: "/api/series/getbyid?id=" + id,
+                    type: "GET",
+                    success: function (data) {
+
+                        $("#title").val(data.Title);
+                        $("#seriesApiId").val(data.SeriesApiId);
+                        $("#seriesType").val(data.SeriesType);
+                        $("#seriesStatus").val(data.SeriesStatus);
+                        $("#gender").val(data.Gender);
+                        $("#releaseYear").val(data.ReleaseYear);
+                        $("#trophyType").val(data.TrophyType);
+                        $("#startDate").val(data.StartDate?.split('T')[0]);
+                        $("#endDate").val(data.EndDate?.split('T')[0]);
+                        $("#isActive").val(data.IsActive.toString());
+                        $("#description").val(data.Description);
+                    }
+                });
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
